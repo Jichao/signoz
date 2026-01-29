@@ -46,6 +46,24 @@ var (
 		FieldDataType: telemetrytypes.FieldDataTypeString,
 	}
 	IntrinsicFields = map[string]telemetrytypes.TelemetryFieldKey{
+		"timestamp": {
+			Name:          "timestamp",
+			Signal:        telemetrytypes.SignalLogs,
+			FieldContext:  telemetrytypes.FieldContextLog,
+			FieldDataType: telemetrytypes.FieldDataTypeNumber,
+		},
+		"observed_timestamp": {
+			Name:          "observed_timestamp",
+			Signal:        telemetrytypes.SignalLogs,
+			FieldContext:  telemetrytypes.FieldContextLog,
+			FieldDataType: telemetrytypes.FieldDataTypeNumber,
+		},
+		"id": {
+			Name:          "id",
+			Signal:        telemetrytypes.SignalLogs,
+			FieldContext:  telemetrytypes.FieldContextLog,
+			FieldDataType: telemetrytypes.FieldDataTypeString,
+		},
 		"body": {
 			Name:          "body",
 			Signal:        telemetrytypes.SignalLogs,
