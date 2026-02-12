@@ -111,7 +111,7 @@ function LaunchChatSupport({
 			setIsAddCreditCardModalOpen(true);
 		} else {
 			logEvent(eventName, attributes);
-			if (window.pylon && !chatMessageDisabled) {
+			if (typeof window.Pylon === 'function' && !chatMessageDisabled) {
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				window.Pylon('showNewMessage', defaultTo(message, ''));
