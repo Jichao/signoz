@@ -161,7 +161,7 @@ export default function Support(): JSX.Element {
 				page: pathname,
 			});
 			setIsAddCreditCardModalOpen(true);
-		} else if (window.pylon) {
+		} else if (typeof window.Pylon === 'function') {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
 			window.Pylon('show');

@@ -826,7 +826,7 @@ function SideNav({ isPinned }: { isPinned: boolean }): JSX.Element {
 					history.push(`${ROUTES.ORG_SETTINGS}#invite-team-members`);
 					break;
 				case 'chat-support':
-					if (window.pylon) {
+					if (typeof window.Pylon === 'function') {
 						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 						// @ts-ignore
 						window.Pylon('show');

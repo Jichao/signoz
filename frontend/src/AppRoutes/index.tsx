@@ -214,6 +214,9 @@ function App(): JSX.Element {
 	]);
 
 	useEffect(() => {
+		// Only call Pylon if it's available (configured and loaded)
+		if (typeof window.Pylon !== 'function') return;
+
 		if (
 			pathname === ROUTES.ONBOARDING ||
 			pathname.startsWith('/public/dashboard/')
