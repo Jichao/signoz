@@ -78,6 +78,7 @@
 		<noscript>You need to enable JavaScript to run this app.</noscript>
 		<div id="root"></div>
 
+		<% if (htmlWebpackPlugin.options.PYLON_APP_ID && htmlWebpackPlugin.options.PYLON_APP_ID !== 'pylon-app-id' && htmlWebpackPlugin.options.PYLON_APP_ID !== '') { %>
 		<script>
 			const PYLON_APP_ID = '<%= htmlWebpackPlugin.options.PYLON_APP_ID %>';
 			(function () {
@@ -109,6 +110,7 @@
 				}
 			})();
 		</script>
+		<% } %>
 		<script type="text/javascript">
 			window.AppcuesSettings = { enableURLDetection: true };
 		</script>
