@@ -44,24 +44,27 @@ function sortTooltipContentBasedOnValue(
 ): Record<string, UplotTooltipDataProps> {
 	const entries = Object.entries(tooltipDataObj);
 
-	// Separate focused and non-focused entries in a single pass
+	// Separate focused, no-data, and regular entries in a single pass
 	const focusedEntries: [string, UplotTooltipDataProps][] = [];
-	const nonFocusedEntries: [string, UplotTooltipDataProps][] = [];
+	const noDataEntries: [string, UplotTooltipDataProps][] = [];
+	const regularEntries: [string, UplotTooltipDataProps][] = [];
 
 	for (let i = 0; i < entries.length; i++) {
 		const entry = entries[i];
 		if (entry[1].focus) {
 			focusedEntries.push(entry);
+		} else if (entry[1].tooltipValue === '(no data)') {
+			noDataEntries.push(entry);
 		} else {
-			nonFocusedEntries.push(entry);
+			regularEntries.push(entry);
 		}
 	}
 
-	// Sort non-focused entries by value (descending)
-	nonFocusedEntries.sort((a, b) => b[1].value - a[1].value);
+	// Sort regular entries by value (descending)
+	regularEntries.sort((a, b) => b[1].value - a[1].value);
 
-	// Combine with focused entries on top
-	return Object.fromEntries(focusedEntries.concat(nonFocusedEntries));
+	// Combine: focused on top, then regular sorted by value, then no-data at bottom
+	return Object.fromEntries(focusedEntries.concat(regularEntries).concat(noDataEntries));
 }
 
 const generateTooltipContent = (
@@ -158,9 +161,14 @@ const generateTooltipContent = (
 
 				let tooltipItemLabel = label;
 
-				if (Number.isFinite(value)) {
-					const tooltipValue = getToolTipValue(value, yAxisUnit, decimalPrecision);
-					const dataIngestedFormated = getToolTipValue(dataIngested);
+				// Show all visible series in tooltip, with "(no data)" for null values
+				const hasValue = Number.isFinite(value);
+				const tooltipValue = hasValue
+					? getToolTipValue(value, yAxisUnit, decimalPrecision)
+					: '(no data)';
+				const dataIngestedFormated = hasValue ? getToolTipValue(dataIngested) : '';
+
+				if (hasValue) {
 					if (duplicatedLegendLabels[label] || label in formattedData) {
 						duplicatedLegendLabels[label] = true;
 						const tempDataObj = formattedData[label];
@@ -177,26 +185,28 @@ const generateTooltipContent = (
 
 						tooltipItemLabel = `${queryName}: ${label}`;
 					}
-
-					const dataObj = {
-						show: item.show || false,
-						color,
-						label,
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
-						focus: item?._focus || false,
-						value,
-						tooltipValue,
-						queryName,
-						textContent: isBillingUsageGraphs
-							? `${tooltipItemLabel} : $${tooltipValue} - ${dataIngestedFormated} ${unit}`
-							: `${tooltipItemLabel} : ${tooltipValue}`,
-					};
-
-					tooltipCount += 1;
-
-					formattedData[tooltipItemLabel] = dataObj;
 				}
+
+				const dataObj = {
+					show: item.show || false,
+					color,
+					label,
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					focus: item?._focus || false,
+					value: hasValue ? value : 0,
+					tooltipValue,
+					queryName,
+					textContent: isBillingUsageGraphs
+						? hasValue
+							? `${tooltipItemLabel} : $${tooltipValue} - ${dataIngestedFormated} ${unit}`
+							: `${tooltipItemLabel} : ${tooltipValue}`
+						: `${tooltipItemLabel} : ${tooltipValue}`,
+				};
+
+				tooltipCount += 1;
+
+				formattedData[tooltipItemLabel] = dataObj;
 			}
 		}
 	}
