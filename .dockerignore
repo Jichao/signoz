@@ -1,4 +1,4 @@
-.git
+# Ignore files during Docker build
 .github
 .vscode
 .devenv
@@ -6,5 +6,8 @@ README.md
 deploy
 sample-apps
 
-# frontend
+# Frontend - keep node_modules minimal
 node_modules
+
+# Don't ignore .git as it's needed for versioning
+# !.git
