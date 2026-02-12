@@ -195,6 +195,8 @@ func AggregationColumnForSamplesTable(
 				aggregationColumn = "countDistinct(value)"
 			case metrictypes.TimeAggregationRate, metrictypes.TimeAggregationIncrease: // only these two options give meaningful results
 				aggregationColumn = "sum(value)"
+			default:
+				aggregationColumn = "sum(value)"
 			}
 		case SamplesV4Agg5mTableName, SamplesV4Agg30mTableName:
 			switch timeAggregation {
@@ -212,6 +214,8 @@ func AggregationColumnForSamplesTable(
 				aggregationColumn = "sum(count)"
 			// count_distinct is not supported in aggregated tables
 			case metrictypes.TimeAggregationRate, metrictypes.TimeAggregationIncrease: // only these two options give meaningful results
+				aggregationColumn = "sum(sum)"
+			default:
 				aggregationColumn = "sum(sum)"
 			}
 		}
@@ -237,6 +241,8 @@ func AggregationColumnForSamplesTable(
 				aggregationColumn = "countDistinct(value)"
 			case metrictypes.TimeAggregationRate, metrictypes.TimeAggregationIncrease: // only these two options give meaningful results
 				aggregationColumn = "max(value)"
+			default:
+				aggregationColumn = "max(value)"
 			}
 		case SamplesV4Agg5mTableName, SamplesV4Agg30mTableName:
 			switch timeAggregation {
@@ -254,6 +260,8 @@ func AggregationColumnForSamplesTable(
 				aggregationColumn = "sum(count)"
 			// count_distinct is not supported in aggregated tables
 			case metrictypes.TimeAggregationRate, metrictypes.TimeAggregationIncrease: // only these two options give meaningful results
+				aggregationColumn = "max(max)"
+			default:
 				aggregationColumn = "max(max)"
 			}
 		}
@@ -277,6 +285,8 @@ func AggregationColumnForSamplesTable(
 				aggregationColumn = "countDistinct(value)"
 			case metrictypes.TimeAggregationRate, metrictypes.TimeAggregationIncrease: // ideally, this should never happen
 				aggregationColumn = "sum(value)"
+			default:
+				aggregationColumn = "sum(value)"
 			}
 		case SamplesV4Agg5mTableName, SamplesV4Agg30mTableName:
 			switch timeAggregation {
@@ -294,6 +304,8 @@ func AggregationColumnForSamplesTable(
 				aggregationColumn = "sum(count)"
 			// count_distinct is not supported in aggregated tables
 			case metrictypes.TimeAggregationRate, metrictypes.TimeAggregationIncrease: // ideally, this should never happen
+				aggregationColumn = "sum(sum)"
+			default:
 				aggregationColumn = "sum(sum)"
 			}
 		}

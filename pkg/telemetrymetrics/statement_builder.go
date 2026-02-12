@@ -599,7 +599,13 @@ func (b *MetricQueryStatementBuilder) buildSpatialAggregationCTE(
 	for _, g := range query.GroupBy {
 		sb.SelectMore(fmt.Sprintf("`%s`", g.TelemetryFieldKey.Name))
 	}
-	sb.SelectMore(fmt.Sprintf("%s(per_series_value) AS value", query.Aggregations[0].SpaceAggregation.StringValue()))
+
+	// Default to sum if space aggregation is not specified
+	spaceAgg := query.Aggregations[0].SpaceAggregation.StringValue()
+	if spaceAgg == "" {
+		spaceAgg = "sum"
+	}
+	sb.SelectMore(fmt.Sprintf("%s(per_series_value) AS value", spaceAgg))
 	sb.From("__temporal_aggregation_cte")
 	sb.Where(sb.EQ("isNaN(per_series_value)", 0))
 	if query.Aggregations[0].ValueFilter != nil {
